@@ -21,14 +21,20 @@
     </ul>
     <form class="add-items">
       <input type="text" name="item" placeholder="Item Name" required>
-      <input type="submit" value="+ Add Item">
-    </form>
+      <input type="submit" value="+ Add Item">            
+    </form>    
+    <p class="all-items">
+        <input type="submit" value="Check All">
+        <input type="submit" value="Clear All">
+    </p>
   </div>
 
 <script>
   const addItems = document.querySelector('.add-items');
   const itemsList = document.querySelector('.plates');
   const items = JSON.parse(localStorage.getItem('items')) || [];
+
+  const allItems = document.querySelector('.all-items');
 
   function addItem(e) {
     // prevent the page from reloading (which is the default action)
@@ -69,10 +75,10 @@
 
   function toggleDone(e) {    
     // fall out if the target is not an input
-    if (!e.target.matches('input')) return;
+    if (!e.target.matches('input')) return;  // Element.matches()
     console.log(e.target);
 
-    // loop through our items array and find the one which has been checked.
+    // find the item which has been checked.
     const el = e.target;
     console.log(el.dataset.index);
     const index = el.dataset.index;
@@ -84,11 +90,36 @@
     populateList(itemsList, items);
   }
 
+  function toggleAllItems(e) {    
+
+    const el = e.target;    
+
+    if (el.value.match('Check All')) {
+      // loop through items array and check all that need to be checked.
+      items.forEach(function(item) {
+        // console.log(item);
+        item.done = true;
+      });
+    } else {
+      items.forEach(function(item) {
+        // console.log(item);
+        item.done = false;
+      });
+    }
+    
+    // update local storage
+    localStorage.setItem('items', JSON.stringify(items));
+    // update the HTML
+    populateList(itemsList, items);
+  }
+
   // listen for the submit event to cover all bases.
   addItems.addEventListener('submit', addItem);
 
   // listen for a click on the items list.  Via event delegation, have the items list pass the event on to it's children.
   itemsList.addEventListener('click', toggleDone);
+
+  allItems.addEventListener('click', toggleAllItems);
 
   // load from local storage..
   populateList(itemsList, items);
