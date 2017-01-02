@@ -24,8 +24,9 @@
       <input type="submit" value="+ Add Item">            
     </form>    
     <p class="all-items">
+        <input type="submit" value="Delete All">
         <input type="submit" value="Check All">
-        <input type="submit" value="Clear All">
+        <input type="submit" value="Uncheck All">
     </p>
   </div>
 
@@ -90,7 +91,14 @@
     populateList(itemsList, items);
   }
 
-  function toggleAllItems(e) {    
+  // method to remove all elements from an Array.
+  Array.prototype.clear = function() {
+    while (this.length) {
+    this.pop();
+    }
+  };
+
+  function handleAll(e) {    
 
     const el = e.target;    
 
@@ -100,11 +108,16 @@
         // console.log(item);
         item.done = true;
       });
-    } else {
+    } else if (el.value.match('Uncheck All')) {
+      // mark all items as not done
       items.forEach(function(item) {
         // console.log(item);
         item.done = false;
       });
+    } else {
+      // delete all items
+      console.log('delete all');
+      items.clear();
     }
     
     // update local storage
@@ -119,7 +132,7 @@
   // listen for a click on the items list.  Via event delegation, have the items list pass the event on to it's children.
   itemsList.addEventListener('click', toggleDone);
 
-  allItems.addEventListener('click', toggleAllItems);
+  allItems.addEventListener('click', handleAll);
 
   // load from local storage..
   populateList(itemsList, items);
