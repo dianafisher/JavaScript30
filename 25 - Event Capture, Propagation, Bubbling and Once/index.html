@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Understanding JavaScript's Capture</title>
+</head>
+<body class="bod">
+
+  <div class="one">
+    <div class="two">
+      <div class="three">
+      </div>
+    </div>
+  </div>
+
+<style>
+  html {
+    box-sizing: border-box;
+  }
+  *, *:before, *:after { box-sizing: inherit; }
+
+  div {
+    width:100%;
+    padding:100px;
+  }
+
+  .one {
+    background: thistle;
+  }
+
+  .two {
+    background:mistyrose;
+  }
+
+  .three {
+    background:coral;
+  }
+</style>
+
+<button></button>
+<script>
+  // select all divs.
+  const divs = document.querySelectorAll('div');
+
+  function logText(e) {
+    console.log(this.classList.value);
+    console.log(this);
+    e.stopPropagation();  // stop the event from being bubbled up.
+  }
+
+  // add an event listener to each div.
+  divs.forEach(div => div.addEventListener('click', logText, {
+    capture: false, // when true, captures the event on the capture down instead of the bubble up.
+    once: true // when true, unbinds itself (same as calling removeEventListener)
+  }));
+
+</script>
+</body>
+</html>
